@@ -9,7 +9,6 @@ const containerStyles = {
 }
 
 export default class D3TreePage extends Component {
-//export default class D3TreePage extends React.PureComponent {
     state = {}
   componentDidMount() {
     const dimensions = this.treeContainer.getBoundingClientRect();
