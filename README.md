@@ -25,3 +25,9 @@ To enable basic Google Analytics page tracking, you can add "REACT_APP_GOOGLE_AN
 If you want more premium or free React Bootstrap themes, you can get it [here](https://flatlogic.com/admin-dashboards?ref=w7yTz44arn)
 
 [![Flat Logic](public/img/screenshots/flatlogic.com_admin-dashboards_react.png)](https://flatlogic.com/admin-dashboards?ref=w7yTz44arn)
+
+## d3
+
+added d3 page following this tutorial, which keeps react and d3 cleanly separate.
+
+https://towardsdatascience.com/react-d3-the-macaroni-and-cheese-of-the-data-visualization-world-12bafde1f922
