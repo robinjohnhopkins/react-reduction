@@ -6,12 +6,14 @@ import Page from 'components/Page';
 
 import { iconD3Data, numberD3Data } from 'demos/D3Page';
 import Viz from 'demos/Viz.js'
+import VizPlay from 'demos/VizPlay.js'
 
 export default class D3Page extends Component {
   state = {
-	  color: "", 
-	  width: "", 
-	  toDraw: [], 
+    vizSel: 'vizPlay',
+	  color: "red", 
+	  width: "10", 
+	  toDraw: [{color:'blue', width: '20'}], 
   }
   onSubmit = (evt) => {
   	evt.preventDefault(); 
@@ -23,6 +25,7 @@ export default class D3Page extends Component {
   } 
 
   onChange = (evt) => {
+  	console.log('setting ', evt.target.name, evt.target.value);
   	this.setState({[evt.target.name]: evt.target.value})
   }
   render() {
@@ -34,8 +37,16 @@ export default class D3Page extends Component {
       >
       <div className="controller">
         <form onSubmit={this.onSubmit}>
+        <label htmlFor="vizSelect">pick a color: </label>
+        <select id="vizSelect" name="vizSel" onChange={this.onChange}  style={{padding:'30px !important', textIndent: '5px', margin: '10px'}} 
+          value={this.state.vizSel||"default"}>
+          <option disabled value="default">choose</option>
+          <option value="viz">viz</option>
+          <option value="vizPlay">vizPlay</option>
+        </select>
         <label htmlFor="colorSelect">pick a color:</label>
-        <select id="colorSelect" name="color" onChange={this.onChange} value={this.state.color||"default"}>
+        <select id="colorSelect" name="color" onChange={this.onChange} style={{padding:'30px !important', textIndent: '5px', margin: '10px'}}
+          value={this.state.color||"default"}>
           <option disabled value="default">choose</option>
           <option value="red">red</option>
           <option value="orange">orange</option>
@@ -45,7 +56,9 @@ export default class D3Page extends Component {
         <input id="pixelInput" name="width" onChange={this.onChange} />
         <button type="submit">draw!</button>
         </form>
-        { this.state.toDraw.length ? <Viz shapes={this.state.toDraw}/> : null}
+        { this.state.toDraw.length ? (this.state.vizSel == 'vizPlay' ? 
+          <VizPlay shapes={this.state.toDraw}/> :
+          <Viz shapes={this.state.toDraw}/>) : null}
       </div>
       </Page>
     );

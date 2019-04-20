@@ -16,6 +16,7 @@ const draw = (props) => {
       .attr('height', h)
       .attr('width', w)
       .attr('id', 'svg-viz')
+    console.log('width, height',w,h);
 
     const bubbles = props.shapes
     const max = d3.max(bubbles)
