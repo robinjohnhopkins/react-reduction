@@ -7,6 +7,7 @@ import Page from 'components/Page';
 import { iconD3Data, numberD3Data } from 'demos/D3Page';
 import Viz from 'demos/Viz.js'
 import VizPlay from 'demos/VizPlay.js'
+import VizMultiLine from 'demos/VizMultiLine.js'
 
 export default class D3Page extends Component {
   state = {
@@ -43,6 +44,7 @@ export default class D3Page extends Component {
           <option disabled value="default">choose</option>
           <option value="viz">viz</option>
           <option value="vizPlay">vizPlay</option>
+          <option value="VizMultiLine">VizMultiLine</option>
         </select>
         <label htmlFor="colorSelect">pick a color:</label>
         <select id="colorSelect" name="color" onChange={this.onChange} style={{padding:'30px !important', textIndent: '5px', margin: '10px'}}
@@ -58,7 +60,9 @@ export default class D3Page extends Component {
         </form>
         { this.state.toDraw.length ? (this.state.vizSel == 'vizPlay' ? 
           <VizPlay shapes={this.state.toDraw}/> :
-          <Viz shapes={this.state.toDraw}/>) : null}
+          (this.state.vizSel == 'VizMultiLine' ?
+          <VizMultiLine shapes={this.state.toDraw}/> :
+          <Viz shapes={this.state.toDraw}/>)) : null}
       </div>
       </Page>
     );
