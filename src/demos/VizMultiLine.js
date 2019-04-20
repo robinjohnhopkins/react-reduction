@@ -2,10 +2,11 @@ import React, { useEffect } from 'react';
 import * as d3 from 'd3';
 
 const VizMultiLine = (props) => {
+    console.log('VizMultiLine ', props);
   useEffect(() => {
    d3.select('.viz > *').remove();
    draw(props)
- }, [props.shapes.length])
+ }, [props.shapes.length, props.exponent]); // inside [] is a list of prop changes that cause a redraw
   return <div className="viz" />
 }
 
@@ -15,7 +16,8 @@ const draw = (props) => {
     var margin = 50;
     var width = 1024;
     var height = 768;
-    var exponent = 1;
+    var exponent = props.exponent || 1;
+    console.log('VizMultiLine exponent=', exponent);
     var cssText = 'border: 1px solid gray';
     var data = [{ date: "10/25/2018", value1: 1, value2: 0 },
     { date: "10/26/2018", value1: 3, value2: 0 },
@@ -66,6 +68,10 @@ const draw = (props) => {
         .range([0, width])
         ;
 
+    // The scale changes depending on exponent
+    // 1 is normal scale
+    // less than 1 skews scale to emphasize lower range
+    // more than one skews scale to emphasize upper range
     var y = d3.scalePow()
         .domain(d3.extent(data, function (d) { return d.value1 }))
         .range([height, 0])
