@@ -88,6 +88,7 @@ const navItems = [
   { to: '/d3', name: 'd3', exact: false, Icon: MdWidgets },
   { to: '/d3tree', name: 'd3tree', exact: false, Icon: MdWidgets },
   { to: '/sigma', name: 'sigma', exact: false, Icon: MdWidgets },
+  { to: '/sigmagraph', name: 'sigmagraph', exact: false, Icon: MdWidgets },
 ];
 
 const bem = bn.create('sidebar');

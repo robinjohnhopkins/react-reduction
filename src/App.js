@@ -22,6 +22,7 @@ import WidgetPage from 'pages/WidgetPage';
 import D3Page from 'pages/D3Page';
 import D3TreePage from 'pages/D3TreePage';
 import SigmaPage from 'pages/SigmaPage';
+import SigmaGraphPage from 'pages/SigmaGraphPage';
 import React from 'react';
 import componentQueries from 'react-component-queries';
 import { BrowserRouter, Redirect, Switch } from 'react-router-dom';
@@ -100,6 +101,12 @@ class App extends React.Component {
               path="/sigma"
               layout={MainLayout}
               component={SigmaPage}
+            />
+            <LayoutRoute
+              exact
+              path="/sigmagraph"
+              layout={MainLayout}
+              component={SigmaGraphPage}
             />
             <LayoutRoute
               exact
