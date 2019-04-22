@@ -8,6 +8,8 @@ import { iconD3Data, numberD3Data } from 'demos/D3Page';
 import Viz from 'demos/Viz.js'
 import VizPlay from 'demos/VizPlay.js'
 import VizMultiLine from 'demos/VizMultiLine.js'
+import VizFancy from 'demos/VizFancy.js'
+
 
 export default class D3Page extends Component {
   state = {
@@ -46,6 +48,7 @@ export default class D3Page extends Component {
           <option value="viz">viz</option>
           <option value="vizPlay">vizPlay</option>
           <option value="VizMultiLine">VizMultiLine</option>
+          <option value="VizFancy">VizFancy</option>
         </select>
         { this.state.vizSel === 'viz' ? 
           <div>
@@ -86,8 +89,27 @@ export default class D3Page extends Component {
           </table>
           <VizMultiLine shapes={this.state.toDraw} exponent={this.state.exponent} /> 
           </div>
-          :
-          <Viz shapes={this.state.toDraw}  />)) : null}
+          : (this.state.vizSel == 'VizFancy' ? 
+          <div>
+          <table>
+            <tbody>
+            <tr>
+                <td>
+                    <span>Emphasize Lower Range</span>
+                </td>
+                <td>
+                    <input name="exponent" onChange={this.onChange} type="range" min=".1" max="5" 
+                      value={this.state.exponent} step=".1" className="slider" id="myRange"/>
+                </td>
+                <td>
+                    <span>Emphasize Upper Range</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <VizFancy shapes={this.state.toDraw} exponent={this.state.exponent} /> 
+        </div> :
+          <Viz shapes={this.state.toDraw}  />))) : null}
       </div>
       </Page>
     );

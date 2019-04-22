@@ -52,7 +52,18 @@ const draw = (props) => {
     var line = d3.line()
       .x(d => x(d.date))
       .y(d => y(d.value))
-      ;
+        .curve(d3.curveLinear)
+        //.curve(d3.curveStepBefore)
+        //.curve(d3.curveStepAfter)
+        ;
+    var line2 = d3.line()
+        .x(d => x(d.date))
+        .y(d => y(d.value))
+//        .curve(d3.curveBasis)     // doesn't necessarily hit point
+//        .curve(d3.curveCardinal)    // does hit points
+          .curve(d3.curveMonotoneX)    // does hit points, closest to linear smoothing
+        ;
+          
       var parseTime = d3.timeParse("%m/%d/%Y");
 
       data.forEach(function (d) {
@@ -72,8 +83,14 @@ const draw = (props) => {
       dataGroup.append("path")
           .data([data])
           .attr("fill", "none")
-          .attr("stroke", "red")
+          .attr("stroke", "blue")
           .attr("d", line)
+
+      dataGroup.append("path")
+              .data([data])
+              .attr("fill", "none")
+              .attr("stroke", "red")
+              .attr("d", line2)
 
       var xAxisGroup = dataGroup
           .append("g")
@@ -93,32 +110,6 @@ const draw = (props) => {
 
       yAxis(yAxisGroup);
 
-
-  //   const bubbles = props.shapes
-  //   const max = d3.max(bubbles)
-  //   const radiusScale = d3.scaleSqrt().domain([0, max]).range([0, max])
-
-  //   const simulation = d3.forceSimulation()
-  //     .force('x', d3.forceX(w/3).strength(0.05))
-  //     .force('y', d3.forceY(h/3).strength(0.05))
-  //     .force('charge', d3.forceManyBody().strength(-1300))
-  //     .force('collide', d3.forceCollide(d => radiusScale(d.number)+1))
-
-  // const circles = d3.select('#svg-viz').selectAll('circle')
-  //   .data(props.shapes)
-  //   .enter()
-  //   .append('svg:circle')
-  //   .attr('r', d => d.width/2+"px")
-  //   .style('fill', (d) => d.color ? d.color : 'purple')
-
-  // simulation.nodes(props.shapes)
-  // .on('tick', ticked)
-  
-  // function ticked() {
-  //     circles
-  //     .attr('cx', d => d.x)
-  //     .attr('cy', d => d.y)
-  //   }
   }
 export default VizPlay
 
