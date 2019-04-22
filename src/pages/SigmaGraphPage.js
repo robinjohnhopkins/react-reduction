@@ -7,11 +7,14 @@ export default class SigmaGraphPage extends Component {
     data: {
         nodes: [
           { id: 'a', category: 'cat', name: 'Garfield' },
-          { id: 'b', category: 'dog', name: 'Pluto' }
+          { id: 'b', category: 'dog', name: 'Pluto' },
+          { id: 'c', category: 'mouse', name: 'Ralph' },
         ],
         // edge labels and types are optional
         edges: [
-          { source: 'a', target: 'b', label: 'friend', type: 'arrow' }
+          { source: 'a', target: 'b', label: 'friend', type: 'arrow' },
+          { source: 'a', target: 'c', label: 'enemy', type: 'arrow' },
+          { source: 'b', target: 'c', label: 'ambivalent', type: 'arrow' }
         ]
       },
       // optional color definition, defaults to d3 category10 based on domain of categories in data
