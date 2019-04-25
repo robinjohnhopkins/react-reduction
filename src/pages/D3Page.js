@@ -9,6 +9,7 @@ import Viz from 'demos/Viz.js'
 import VizPlay from 'demos/VizPlay.js'
 import VizMultiLine from 'demos/VizMultiLine.js'
 import VizFancy from 'demos/VizFancy.js'
+import VizForceDirectedLayout from 'demos/VizForceDirectedLayout.js'
 
 
 export default class D3Page extends Component {
@@ -49,6 +50,7 @@ export default class D3Page extends Component {
           <option value="vizPlay">vizPlay</option>
           <option value="VizMultiLine">VizMultiLine</option>
           <option value="VizFancy">VizFancy</option>
+          <option value="ForceDirectedLayout">ForceDirectedLayout</option>
         </select>
         { this.state.vizSel === 'viz' ? 
           <div>
@@ -67,7 +69,12 @@ export default class D3Page extends Component {
           : null
           }
         </form>
-        { this.state.toDraw.length ? (this.state.vizSel == 'vizPlay' ? 
+        { this.state.toDraw.length ? 
+          (this.state.vizSel == 'ForceDirectedLayout' ?
+          <div>
+          <VizForceDirectedLayout shapes={this.state.toDraw}/>
+          </div> :
+           this.state.vizSel == 'vizPlay' ? 
           <VizPlay shapes={this.state.toDraw}/> :
           (this.state.vizSel == 'VizMultiLine' ?
           <div>
