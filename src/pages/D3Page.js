@@ -10,7 +10,7 @@ import VizPlay from 'demos/VizPlay.js'
 import VizMultiLine from 'demos/VizMultiLine.js'
 import VizFancy from 'demos/VizFancy.js'
 import VizForceDirectedLayout from 'demos/VizForceDirectedLayout.js'
-
+import axios from 'axios'
 
 export default class D3Page extends Component {
   state = {
@@ -19,6 +19,30 @@ export default class D3Page extends Component {
     width: "10", 
     exponent: 1,
 	  toDraw: [{color:'blue', width: '20'}], 
+  }
+  constructor(){
+    super();
+    // run java spring REST app ~/workspace/vertex/ to provide edges and vertexes json
+    this.doUpdate = this.doUpdate.bind(this);
+    axios.get('http://localhost:8080/edges')
+    .then(edgesResponse => {
+      // console.log('edges', edgesResponse);
+      axios.get('http://localhost:8080/vertexes')
+      .then(vertexesResponse => {
+        console.log('vertexes', vertexesResponse, edgesResponse);
+        this.doUpdate(vertexesResponse, edgesResponse);
+      });
+  
+    });
+  }
+  doUpdate(vertexesResponse, edgesResponse){
+    //console.log('doUpdate vertexes', vertexesResponse.data, edgesResponse.data);
+    this.setState({
+          data: {
+            nodes: vertexesResponse.data,
+            edges: edgesResponse.data
+          }
+        });
   }
   onSubmit = (evt) => {
   	evt.preventDefault(); 
@@ -72,7 +96,7 @@ export default class D3Page extends Component {
         { this.state.toDraw.length ? 
           (this.state.vizSel == 'ForceDirectedLayout' ?
           <div>
-          <VizForceDirectedLayout shapes={this.state.toDraw}/>
+          <VizForceDirectedLayout data={this.state.data} />
           </div> :
            this.state.vizSel == 'vizPlay' ? 
           <VizPlay shapes={this.state.toDraw}/> :

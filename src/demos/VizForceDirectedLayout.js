@@ -5,7 +5,7 @@ const VizForceDirectedLayout = (props) => {
   useEffect(() => {
    d3.select('.viz > *').remove();
    draw(props)
- }, [props.shapes.length])
+ }, [props.data])
   return <div className="viz" />
 }
 
@@ -72,6 +72,11 @@ var links = [
     { "source": "Gemini 12", "target": "James Lovell" },
     { "source": "Gemini 12", "target": "Edwin Aldrin" }
 ];
+if (props.data){
+  console.log('props.data ', props.data);
+  nodes = props.data.nodes;
+  links = props.data.edges;
+}
 
 var width = 2000;
 var height = 1000;
@@ -127,16 +132,20 @@ node
     .attr("fill", fillColor);
 
 function radius(d) {
-    if (d.nodeType == "A") {
-        return 10;
-    } else {
-        if (d.program == "Mercury") {
+  if (d.nodeType == undefined) {
+    return 2;
+  } else {
+    if (d.nodeType && d.nodeType == "A") {
+      return 10;
+  } else {
+    if (d.program && d.program == "Mercury") {
             return 15;
         }
         else {
             return 24;
         }
     }
+  }
 }
 
 function fillColor(d) {
