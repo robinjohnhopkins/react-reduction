@@ -1,13 +1,34 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import * as d3 from 'd3';
 
+var cssText = "position: absolute; max-width: 400px; height: auto;padding: 5px; background-color: white; -webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;-webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);-moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4); box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4); pointer-events: none; font: 12px sans-serif;";
+
+// .hovercard {
+//   position: absolute;
+//   max-width: 400px;
+//   height: auto;
+//   padding: 5px;
+//   background-color: white;
+//   -webkit-border-radius: 5px;
+//   -moz-border-radius: 5px;
+//   border-radius: 5px;
+//   -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+//   -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+//   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+//   pointer-events: none;
+//   font: 12px sans-serif;
+// }
+
 const VizForceDirectedLayout = (props) => {
+
   useEffect(() => {
    d3.select('.viz > *').remove();
    draw(props)
  }, [props.data])
   return <div className="viz" />
 }
+
+
 
 const draw = (props) => {
   var nodes = [
@@ -86,6 +107,13 @@ var svg = d3.select('.viz').append('svg')
     .attr("height", height);
 
 var g = svg.append("g");
+
+// add hovercard
+var hovercard = d3.select('body').append('div')
+      .attr('class', 'hovercard')
+      .style('opacity', 0)
+      .style('width', 400)
+      .attr('style', cssText);
 
 var simulation = d3.forceSimulation().nodes(nodes);
 
@@ -199,6 +227,49 @@ function simulation_tick() {
             // g elements do not have x y coordinates
             // instead we need to apply a transform as calculated by the simulation
         .attr("transform", function (d) { return "translate(" + d.x + ", " + d.y + ")"; });
+
+    link.on('mouseover', function(d) {
+           
+          hovercard.transition()
+               .duration(100)
+               .style('opacity', 1);
+        
+          var info = {
+            label: d.label,
+            type: d.type,
+            source:{
+              name: d.source.name,
+              category: d.source.category,
+              id: d.source.id,
+            }, 
+            target:{
+              name: d.target.name,
+              category: d.target.category,
+              id: d.target.id,
+            },
+          };
+          var tip = 
+               '<div><h2>link info</h2><div>' + JSON.stringify(info) + '</div></div>';
+
+          // This is the info in d that is used
+          //  index: 7
+          //  label: "Cat"
+          //  source: {id: "fb", category: "Cat", name: "fb", index: 5, x: 1060.5768978336328, …}
+          //  target: {id: "gb", category: "Dog", name: "gb", index: 6, x: 1012.5837557247899, …}
+          //  type: "arrow"
+
+           hovercard.html(tip)
+               .style('left', d3.event.pageX + 'px')
+               .style('top', d3.event.pageY + 'px');
+           console.log('hover link', d);
+       });
+       
+       link.on('mouseout', function(d) {
+           
+           hovercard.transition()
+               .duration(100)
+               .style('opacity',0);
+       });
 }
 
   }
