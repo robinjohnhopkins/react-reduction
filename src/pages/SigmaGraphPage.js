@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Page from 'components/Page';
 import Graph from 'react-sigma-graph';
+import axios from 'axios'
 
 export default class SigmaGraphPage extends Component {
   state = {
@@ -22,7 +23,31 @@ export default class SigmaGraphPage extends Component {
         'cat': '#1f77b4',
         'dog': '#ff7f0e'
       }
-    }
+    };
+  constructor(){
+    super();
+    // run java spring REST app ~/workspace/vertex/ to provide edges and vertexes json
+    this.doUpdate = this.doUpdate.bind(this);
+    axios.get('http://localhost:8080/edges')
+    .then(edgesResponse => {
+      // console.log('edges', edgesResponse);
+      axios.get('http://localhost:8080/vertexes')
+      .then(vertexesResponse => {
+        console.log('vertexes', vertexesResponse, edgesResponse);
+        this.doUpdate(vertexesResponse, edgesResponse);
+      });
+  
+    });
+  }
+  doUpdate(vertexesResponse, edgesResponse){
+    //console.log('doUpdate vertexes', vertexesResponse.data, edgesResponse.data);
+    this.setState({
+          data: {
+            nodes: vertexesResponse.data,
+            edges: edgesResponse.data
+          }
+        });
+  }
 
   render() {
     return (
