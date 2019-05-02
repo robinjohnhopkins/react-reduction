@@ -151,7 +151,13 @@ var node = g.selectAll("g")
     .call(d3.drag()
         .on("start", dragStart)
         .on("drag", dragDone)
-    );
+    )
+    .on("click", function(d){
+      console.log('node click',d);
+      d3.select(this).attr('r', 25)
+          .style("fill","lightcoral")
+          .style("stroke","red");
+  });
 
 // add the node circle with the specific colors and radius
 node
@@ -193,7 +199,7 @@ node
     .attr("style", "fill:white;fill-opacity:1;stroke:#444444;stroke-width:.5px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;")
     .text(function (d) { return d.name });
     // above styling is white text with black outline
-
+    
 // attach the zoom handler
 var zoom_handler = d3.zoom()
     .on("zoom", zoom_actions);
