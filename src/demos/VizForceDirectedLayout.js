@@ -99,7 +99,7 @@ if (props.data){
   links = props.data.edges;
 }
 
-var width = 2000;
+var width = 1000;
 var height = 1000;
 
 var svg = d3.select('.viz').append('svg')

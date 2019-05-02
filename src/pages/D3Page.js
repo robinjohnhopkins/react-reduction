@@ -1,16 +1,27 @@
 import React, { Component } from 'react';
-
 import { Row, Col } from 'reactstrap';
-
 import Page from 'components/Page';
-
-import { iconD3Data, numberD3Data } from 'demos/D3Page';
 import Viz from 'demos/Viz.js'
 import VizPlay from 'demos/VizPlay.js'
 import VizMultiLine from 'demos/VizMultiLine.js'
 import VizFancy from 'demos/VizFancy.js'
 import VizForceDirectedLayout from 'demos/VizForceDirectedLayout.js'
 import axios from 'axios'
+import 'react-bootstrap-table/css/react-bootstrap-table.css'
+
+var ReactBsTable  = require('react-bootstrap-table');
+var BootstrapTable = ReactBsTable.BootstrapTable;
+var TableHeaderColumn = ReactBsTable.TableHeaderColumn;
+
+var products = [{
+  id: 1,
+  name: "Product1",
+  price: 120
+}, {
+  id: 2,
+  name: "Product2",
+  price: 80
+}];
 
 export default class D3Page extends Component {
   state = {
@@ -57,7 +68,7 @@ export default class D3Page extends Component {
   	console.log('setting ', evt.target.name, evt.target.value);
   	this.setState({[evt.target.name]: evt.target.value})
   }
-  render() {
+  render() {  
     return (
       <Page
         className="D3Page"
@@ -95,9 +106,34 @@ export default class D3Page extends Component {
         </form>
         { this.state.toDraw.length ? 
           (this.state.vizSel == 'ForceDirectedLayout' ?
-          <div>
-          <VizForceDirectedLayout data={this.state.data} />
-          </div> :
+          <div >
+                <Row>
+                    <Col lg={6} md={6} sm={6} xs={12} className="zmb-3">
+                      <VizForceDirectedLayout data={this.state.data} />
+                    </Col>
+                    <Col lg={6} md={6} sm={6} xs={12} className="zmb-3">
+                    {/* <table>
+                      <tbody>
+                        <tr>
+                          <th>Firstname</th>
+                          <th>Lastname</th> 
+                          <th>Age</th>
+                        </tr>
+                        <tr>
+                          <td>Jill</td>
+                          <td>Smith</td> 
+                          <td>50</td>
+                        </tr>
+                        </tbody>
+                      </table> */}
+                      <BootstrapTable data={products} striped hover>
+                          <TableHeaderColumn isKey dataField='id'>Product ID</TableHeaderColumn>
+                          <TableHeaderColumn dataField='name'>Product Name</TableHeaderColumn>
+                          <TableHeaderColumn dataField='price'>Product Price</TableHeaderColumn>
+                      </BootstrapTable>
+                    </Col>
+                </Row>
+            </div>:
            this.state.vizSel == 'vizPlay' ? 
           <VizPlay shapes={this.state.toDraw}/> :
           (this.state.vizSel == 'VizMultiLine' ?
