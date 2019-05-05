@@ -7,21 +7,36 @@ import VizMultiLine from 'demos/VizMultiLine.js'
 import VizFancy from 'demos/VizFancy.js'
 import VizForceDirectedLayout from 'demos/VizForceDirectedLayout.js'
 import axios from 'axios'
-import 'react-bootstrap-table/css/react-bootstrap-table.css'
-
-var ReactBsTable  = require('react-bootstrap-table');
-var BootstrapTable = ReactBsTable.BootstrapTable;
-var TableHeaderColumn = ReactBsTable.TableHeaderColumn;
+import 'react-bootstrap-table-next/dist/react-bootstrap-table2.css'
+import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
+import paginationFactory from 'react-bootstrap-table2-paginator';
+import BootstrapTable from 'react-bootstrap-table-next';
 
 var products = [{
   id: 1,
   name: "Product1",
-  price: 120
+  price: '120'
 }, {
   id: 2,
   name: "Product2",
-  price: 80
+  price: '80'
 }];
+const columns = [{
+  dataField: 'id',
+  text: 'Product ID'
+}, {
+  dataField: 'name',
+  text: 'Product Name'
+}, {
+  dataField: 'price',
+  text: 'Product Price'
+}];
+// node={
+//   category: "Fish",
+//   id: "kb",
+//   index: 10,
+//   name: "kb"  
+// }
 
 export default class D3Page extends Component {
   state = {
@@ -29,12 +44,14 @@ export default class D3Page extends Component {
 	  color: "red", 
     width: "10", 
     exponent: 1,
-	  toDraw: [{color:'blue', width: '20'}], 
+    toDraw: [{color:'blue', width: '20'}], 
+    selectednode:[]
   }
   constructor(){
     super();
     // run java spring REST app ~/workspace/vertex/ to provide edges and vertexes json
     this.doUpdate = this.doUpdate.bind(this);
+    this.setSelected = this.setSelected.bind(this);
     axios.get('http://localhost:8080/edges')
     .then(edgesResponse => {
       // console.log('edges', edgesResponse);
@@ -45,6 +62,28 @@ export default class D3Page extends Component {
       });
   
     });
+  }
+  setSelected(selectednode){
+    //console.log('doUpdate vertexes', vertexesResponse.data, edgesResponse.data);
+    if (selectednode && selectednode.id && selectednode.name){
+      if (this.state.selectednode[0] == undefined || this.state.selectednode[0].id != selectednode.id){
+        // this.setState(prevState => ({
+        //   selectednode: {
+        //     ...prevState.cardHeights,
+        //     [index]: height,
+        //   },
+        //  }));
+  
+        this.setState(prevState => ({
+          selectednode: [{
+            'id':selectednode.id,
+            'name':selectednode.name,
+            'category':selectednode.category
+          }]
+        }),() => { console.log('hey', JSON.stringify(this.state))});  
+  
+      }
+    }
   }
   doUpdate(vertexesResponse, edgesResponse){
     //console.log('doUpdate vertexes', vertexesResponse.data, edgesResponse.data);
@@ -68,7 +107,22 @@ export default class D3Page extends Component {
   	console.log('setting ', evt.target.name, evt.target.value);
   	this.setState({[evt.target.name]: evt.target.value})
   }
+  static getDerivedStateFromError(error) {
+    console.log('getDerivedStateFromError', error);
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true };
+  }
+  componentDidCatch(error, info) {
+    // You can also log the error to an error reporting service
+    console.log('componentDidCatch', error, info);
+  }
   render() {  
+    if(this.state.selectednode != undefined){
+      console.log(this.state.selectednode);
+    }
+    if( this.state.data != undefined && this.state.data.nodes != undefined){
+      console.log(this.state.data.nodes);
+    }
     return (
       <Page
         className="D3Page"
@@ -108,29 +162,26 @@ export default class D3Page extends Component {
           (this.state.vizSel == 'ForceDirectedLayout' ?
           <div >
                 <Row>
-                    <Col lg={6} md={6} sm={6} xs={12} className="zmb-3">
-                      <VizForceDirectedLayout data={this.state.data} />
+                    <Col lg={8} md={6} sm={6} xs={12} className="zmb-3">
+                      <VizForceDirectedLayout data={this.state.data} setSelected={this.setSelected} />
                     </Col>
-                    <Col lg={6} md={6} sm={6} xs={12} className="zmb-3">
-                    {/* <table>
-                      <tbody>
-                        <tr>
-                          <th>Firstname</th>
-                          <th>Lastname</th> 
-                          <th>Age</th>
-                        </tr>
-                        <tr>
-                          <td>Jill</td>
-                          <td>Smith</td> 
-                          <td>50</td>
-                        </tr>
-                        </tbody>
-                      </table> */}
-                      <BootstrapTable data={products} striped hover>
-                          <TableHeaderColumn isKey dataField='id'>Product ID</TableHeaderColumn>
-                          <TableHeaderColumn dataField='name'>Product Name</TableHeaderColumn>
-                          <TableHeaderColumn dataField='price'>Product Price</TableHeaderColumn>
-                      </BootstrapTable>
+                    <Col lg={4} md={6} sm={6} xs={12} className="zmb-3">
+                    {this.state.data != undefined && this.state.data.nodes != undefined ? 
+                      <div>
+                        <BootstrapTable keyField='id' data={ products } columns={ columns } 
+                          pagination={ paginationFactory() }/>
+                      </div>
+                      : null }
+                      {this.state.selectednode != undefined ? 
+                      <div>
+                        <p>selected:eh</p>
+                        <p>selected:{JSON.stringify(this.state.selectednode)}</p>
+                        {/* <BootstrapTable data={this.state.selectednode} striped hover>
+                            <TableHeaderColumn isKey dataField='id'>ID</TableHeaderColumn>
+                            <TableHeaderColumn dataField='category'>category</TableHeaderColumn>
+                        </BootstrapTable> */}
+                      </div>
+                      : null }
                     </Col>
                 </Row>
             </div>:

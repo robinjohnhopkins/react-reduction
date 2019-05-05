@@ -97,6 +97,8 @@ if (props.data){
   console.log('props.data ', props.data);
   nodes = props.data.nodes;
   links = props.data.edges;
+} else {
+  console.log('NOT props.data ');
 }
 
 var width = 1000;
@@ -141,7 +143,7 @@ var link = g
     .append("line")
     .attr("stroke-width", 2)
     .attr("stroke", "#ddd");
-
+var setSelected = props.setSelected;
 //group the nodes together for easier ticking
 var node = g.selectAll("g")
     .data(nodes)
@@ -154,6 +156,8 @@ var node = g.selectAll("g")
     )
     .on("click", function(d){
       console.log('node click',d);
+      setSelected(d);
+
       d3.select(this).attr('r', 25)
           .style("fill","lightcoral")
           .style("stroke","red");
