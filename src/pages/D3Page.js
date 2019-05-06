@@ -162,6 +162,18 @@ export default class D3Page extends Component {
     if( this.state.data != undefined && this.state.data.nodes != undefined){
       // console.log(this.state.data.nodes);
     }
+    const selectRow = {
+      mode: 'radio', // single row selection
+      // mode: 'checkbox',
+      onSelect: (row, isSelect, rowIndex, e) => {
+        console.log('click ', row);
+        this.setSelected(row);
+        // row: {id: "ib", category: "Cat", name: "ib", index: 8, x: 245.45121212454782, …}
+        // if (SOME_CONDITION) {
+        //   return false; to reject selection
+        // }
+      }
+     };
     return (
       <Page
         className="D3Page"
@@ -209,7 +221,7 @@ export default class D3Page extends Component {
                     {this.state.data != undefined && this.state.data.nodes != undefined ? 
                       <div>
                         <BootstrapTable keyField='id' data={ this.state.data.nodes } columns={ columnsReal } 
-                          pagination={ paginationFactory() }/>
+                          pagination={ paginationFactory() } selectRow={ selectRow }/>
                       </div>
                       : null }
                       {this.state.selectednode.length > 0 ? 
