@@ -7,6 +7,7 @@ import axios from 'axios'
 import EmphasizeRange from './EmphasizeRange';
 import VizAddCircles from 'demos/VizAddCircles';
 import VizForceDirectedLayoutAndTable from 'demos/VizForceDirectedLayoutAndTable';
+import VisVis from 'demos/VisVis';
 
 export default class D3Page extends Component {
   state = {
@@ -105,8 +106,11 @@ export default class D3Page extends Component {
           <option value="VizMultiLine">VizMultiLine</option>
           <option value="VizFancy">VizFancy</option>
           <option value="ForceDirectedLayout">ForceDirectedLayout</option>
+          <option value="Vis">Vis</option>
         </select>
       </div>
+        { this.state.vizSel === 'Vis' ? <VisVis data={this.state.data} 
+          screenWidth={this.state.screenWidth} /> : null}
         { this.state.vizSel === 'viz' ? <VizAddCircles /> : null}
         { this.state.vizSel == 'ForceDirectedLayout' ? 
           <VizForceDirectedLayoutAndTable data={this.state.data} /> : null }
