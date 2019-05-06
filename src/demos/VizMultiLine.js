@@ -6,7 +6,7 @@ const VizMultiLine = (props) => {
   useEffect(() => {
    d3.select('.viz > *').remove();
    draw(props)
- }, [props.shapes.length, props.exponent]); // inside [] is a list of prop changes that cause a redraw
+ }, [ props.exponent]); // inside [] is a list of prop changes that cause a redraw
   return <div className="viz" />
 }
 

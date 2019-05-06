@@ -1,58 +1,17 @@
 import React, { Component } from 'react';
-import { Row, Col } from 'reactstrap';
 import Page from 'components/Page';
-import Viz from 'demos/Viz.js'
 import VizPlay from 'demos/VizPlay.js'
 import VizMultiLine from 'demos/VizMultiLine.js'
 import VizFancy from 'demos/VizFancy.js'
-import VizForceDirectedLayout from 'demos/VizForceDirectedLayout.js'
 import axios from 'axios'
-import 'react-bootstrap-table-next/dist/react-bootstrap-table2.css'
-import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
-import paginationFactory from 'react-bootstrap-table2-paginator';
-import BootstrapTable from 'react-bootstrap-table-next';
 import EmphasizeRange from './EmphasizeRange';
-
-var products = [{
-  id: 1,
-  name: "Product1",
-  price: '120'
-}, {
-  id: 2,
-  name: "Product2",
-  price: '80'
-}];
-const columns = [{
-  dataField: 'id',
-  text: 'Product ID'
-}, {
-  dataField: 'name',
-  text: 'Product Name'
-}, {
-  dataField: 'price',
-  text: 'Product Price'
-}];
-const columnsReal = [{
-  dataField: 'id',
-  text: 'ID'
-}, {
-  dataField: 'category',
-  text: 'category'
-}];
-// node={
-//   category: "Fish",
-//   id: "kb",
-//   index: 10,
-//   name: "kb"  
-// }
+import VizAddCircles from 'demos/VizAddCircles';
+import VizForceDirectedLayoutAndTable from 'demos/VizForceDirectedLayoutAndTable';
 
 export default class D3Page extends Component {
   state = {
     vizSel: 'vizPlay',
-	  color: "red", 
-    width: "10", 
     exponent: 1,
-    toDraw: [{color:'blue', width: '20'}], 
     selectednode:[],
     screenWidth:  800,
   }
@@ -61,7 +20,6 @@ export default class D3Page extends Component {
     // run java spring REST app ~/workspace/vertex/ to provide edges and vertexes json
     this.doUpdate = this.doUpdate.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
-    this.setSelected = this.setSelected.bind(this);
     axios.get('http://localhost:8080/edges')
     .then(edgesResponse => {
       // console.log('edges', edgesResponse);
@@ -99,34 +57,15 @@ export default class D3Page extends Component {
     window.removeEventListener("resize", this.updateDimensions);
   }
 
-  /**
-   * callback when node selected
-   */
-  setSelected(selectednode){
-    //console.log('doUpdate vertexes', vertexesResponse.data, edgesResponse.data);
-    if (selectednode && selectednode.id && selectednode.name){
-      if (this.state.selectednode[0] == undefined || this.state.selectednode[0].id != selectednode.id){
-        // this.setState(prevState => ({
-        //   selectednode: {
-        //     ...prevState.cardHeights,
-        //     [index]: height,
-        //   },
-        //  }));
-  
-        this.setState(prevState => ({
-          selectednode: [{
-            'id':selectednode.id,
-            'name':selectednode.name,
-            'category':selectednode.category
-          }]
-        }),() => { // console.log('hey', JSON.stringify(this.state))
-                  });  
-  
-      }
-    }
-  }
+  // example node in nodes
+  // node={
+  //   category: "Fish",
+  //   id: "kb",
+  //   index: 10,
+  //   name: "kb"  
+  // }
   doUpdate(vertexesResponse, edgesResponse){
-    //console.log('doUpdate vertexes', vertexesResponse.data, edgesResponse.data);
+    console.log('doUpdate vertexes', vertexesResponse.data, edgesResponse.data);
     this.setState({
           data: {
             nodes: vertexesResponse.data,
@@ -134,14 +73,6 @@ export default class D3Page extends Component {
           }
         });
   }
-  onSubmit = (evt) => {
-  	evt.preventDefault(); 
-  	const newShape = {
-  	   color: this.state.color, 
-  	   width: this.state.width,
-  	}
-    this.setState({ toDraw: [...this.state.toDraw, newShape]})
-  } 
 
   onChange = (evt) => {
   	console.log('viz selection change ', evt.target.name, evt.target.value);
@@ -156,25 +87,7 @@ export default class D3Page extends Component {
     // You can also log the error to an error reporting service
     console.log('componentDidCatch', error, info);
   }
-  render() {  
-    if(this.state.selectednode != undefined){
-      //console.log(this.state.selectednode);
-    }
-    if( this.state.data != undefined && this.state.data.nodes != undefined){
-      // console.log(this.state.data.nodes);
-    }
-    const selectRow = {
-      mode: 'radio', // single row selection
-      // mode: 'checkbox',
-      onSelect: (row, isSelect, rowIndex, e) => {
-        console.log('click ', row);
-        this.setSelected(row);
-        // row: {id: "ib", category: "Cat", name: "ib", index: 8, x: 245.45121212454782, …}
-        // if (SOME_CONDITION) {
-        //   return false; to reject selection
-        // }
-      }
-     };
+  render() {
     return (
       <Page
         className="D3Page"
@@ -182,8 +95,8 @@ export default class D3Page extends Component {
         breadcrumbs={[{ name: 'D3s', active: true }]}
       >
       <div className="controller">
-        <form onSubmit={this.onSubmit}>
-        <label htmlFor="vizSelect">pick a color: </label>
+      <div>
+        <label htmlFor="vizSelect">pick a viz: </label>
         <select id="vizSelect" name="vizSel" onChange={this.onChange}  style={{padding:'30px !important', textIndent: '5px', margin: '10px', width:'150px'}} 
           value={this.state.vizSel||"default"}>
           <option disabled value="default">choose</option>
@@ -193,61 +106,21 @@ export default class D3Page extends Component {
           <option value="VizFancy">VizFancy</option>
           <option value="ForceDirectedLayout">ForceDirectedLayout</option>
         </select>
-        { this.state.vizSel === 'viz' ? 
-          <div>
-          <label htmlFor="colorSelect">pick a color:</label>
-          <select id="colorSelect" name="color" onChange={this.onChange} style={{padding:'30px !important', textIndent: '5px', margin: '10px'}}
-            value={this.state.color||"default"}>
-            <option disabled value="default">choose</option>
-            <option value="red">red</option>
-            <option value="orange">orange</option>
-            <option value="yellow">yellow</option>
-          </select>
-          <label htmlFor="pixelInput">how big:</label>
-          <input id="pixelInput" name="width" onChange={this.onChange} />
-          <button type="submit">draw!</button>
-          </div>
-          : null
-          }
-        </form>
-        { this.state.toDraw.length ? 
-          (this.state.vizSel == 'ForceDirectedLayout' ?
-          <div >
-                <Row>
-                    <Col lg={8} md={6} sm={6} xs={12} className="zmb-3">
-                      <VizForceDirectedLayout data={this.state.data} 
-                        setSelected={this.setSelected} screenWidth={this.state.screenWidth}/>
-                    </Col>
-                    <Col lg={4} md={6} sm={6} xs={12} className="zmb-3">
-                    {this.state.data != undefined && this.state.data.nodes != undefined ? 
-                      <div>
-                        <BootstrapTable keyField='id' data={ this.state.data.nodes } columns={ columnsReal } 
-                          pagination={ paginationFactory() } selectRow={ selectRow }/>
-                      </div>
-                      : null }
-                      {this.state.selectednode.length > 0 ? 
-                      <div>
-                        <p>selected:</p>
-                        <BootstrapTable keyField='id' data={ this.state.selectednode } 
-                          columns={ columnsReal } />
-                      </div>
-                      : null }
-                    </Col>
-                </Row>
-            </div>:
-           this.state.vizSel == 'vizPlay' ? 
-          <VizPlay shapes={this.state.toDraw}/> :
-          (this.state.vizSel == 'VizMultiLine' ?
+      </div>
+        { this.state.vizSel === 'viz' ? <VizAddCircles /> : null}
+        { this.state.vizSel == 'ForceDirectedLayout' ? 
+          <VizForceDirectedLayoutAndTable data={this.state.data} /> : null }
+          { this.state.vizSel == 'vizPlay' ? <VizPlay /> : null}
+          { this.state.vizSel == 'VizMultiLine' ?
           <div>
             <EmphasizeRange onChange={this.onChange} value={this.state.exponent} />
-          <VizMultiLine shapes={this.state.toDraw} exponent={this.state.exponent} /> 
-          </div>
-          : (this.state.vizSel == 'VizFancy' ? 
+            <VizMultiLine exponent={this.state.exponent} /> 
+          </div>: null}
+          { this.state.vizSel == 'VizFancy' ? 
           <div>
             <EmphasizeRange onChange={this.onChange} value={this.state.exponent} />
-        <VizFancy shapes={this.state.toDraw} exponent={this.state.exponent} /> 
-        </div> :
-          <Viz shapes={this.state.toDraw}  />))) : null}
+            <VizFancy exponent={this.state.exponent} /> 
+          </div> : null }
       </div>
       </Page>
     );

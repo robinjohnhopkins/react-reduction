@@ -5,7 +5,7 @@ const VizPlay = (props) => {
   useEffect(() => {
    d3.select('.viz > *').remove();
    draw(props)
- }, [props.shapes.length])
+ }, [])  // [] was [props.shapes.length] previously a redraw check 
   return <div className="viz" />
 }
 
