@@ -8,6 +8,7 @@ import EmphasizeRange from './EmphasizeRange';
 import VizAddCircles from 'demos/VizAddCircles';
 import VizForceDirectedLayoutAndTable from 'demos/VizForceDirectedLayoutAndTable';
 import VisVis from 'demos/VisVis';
+import VisComplex from 'demos/VisComplex';
 
 export default class D3Page extends Component {
   state = {
@@ -95,7 +96,7 @@ export default class D3Page extends Component {
         title="D3s"
         breadcrumbs={[{ name: 'D3s', active: true }]}
       >
-      <div className="controller">
+      <div className="controller" id="d3page" >
       <div>
         <label htmlFor="vizSelect">pick a viz: </label>
         <select id="vizSelect" name="vizSel" onChange={this.onChange}  style={{padding:'30px !important', textIndent: '5px', margin: '10px', width:'150px'}} 
@@ -107,8 +108,11 @@ export default class D3Page extends Component {
           <option value="VizFancy">VizFancy</option>
           <option value="ForceDirectedLayout">ForceDirectedLayout</option>
           <option value="Vis">Vis</option>
+          <option value="VisComplex">VisComplex</option>
         </select>
       </div>
+        { this.state.vizSel === 'VisComplex' ? <VisComplex data={this.state.data} 
+          screenWidth={this.state.screenWidth} /> : null}
         { this.state.vizSel === 'Vis' ? <VisVis data={this.state.data} 
           screenWidth={this.state.screenWidth} /> : null}
         { this.state.vizSel === 'viz' ? <VizAddCircles /> : null}
