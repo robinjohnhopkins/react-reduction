@@ -11,6 +11,7 @@ import 'react-bootstrap-table-next/dist/react-bootstrap-table2.css'
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import BootstrapTable from 'react-bootstrap-table-next';
+import EmphasizeRange from './EmphasizeRange';
 
 var products = [{
   id: 1,
@@ -238,42 +239,12 @@ export default class D3Page extends Component {
           <VizPlay shapes={this.state.toDraw}/> :
           (this.state.vizSel == 'VizMultiLine' ?
           <div>
-            <table>
-              <tbody>
-              <tr>
-                  <td>
-                      <span>Emphasize Lower Range</span>
-                  </td>
-                  <td>
-                      <input name="exponent" onChange={this.onChange} type="range" min=".1" max="5" 
-                        value={this.state.exponent} step=".1" className="slider" id="myRange"/>
-                  </td>
-                  <td>
-                      <span>Emphasize Upper Range</span>
-                  </td>
-              </tr>
-              </tbody>
-          </table>
+            <EmphasizeRange onChange={this.onChange} value={this.state.exponent} />
           <VizMultiLine shapes={this.state.toDraw} exponent={this.state.exponent} /> 
           </div>
           : (this.state.vizSel == 'VizFancy' ? 
           <div>
-          <table>
-            <tbody>
-            <tr>
-                <td>
-                    <span>Emphasize Lower Range</span>
-                </td>
-                <td>
-                    <input name="exponent" onChange={this.onChange} type="range" min=".1" max="5" 
-                      value={this.state.exponent} step=".1" className="slider" id="myRange"/>
-                </td>
-                <td>
-                    <span>Emphasize Upper Range</span>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+            <EmphasizeRange onChange={this.onChange} value={this.state.exponent} />
         <VizFancy shapes={this.state.toDraw} exponent={this.state.exponent} /> 
         </div> :
           <Viz shapes={this.state.toDraw}  />))) : null}
