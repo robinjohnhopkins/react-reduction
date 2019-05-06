@@ -31,6 +31,13 @@ const columns = [{
   dataField: 'price',
   text: 'Product Price'
 }];
+const columnsReal = [{
+  dataField: 'id',
+  text: 'ID'
+}, {
+  dataField: 'category',
+  text: 'category'
+}];
 // node={
 //   category: "Fish",
 //   id: "kb",
@@ -45,24 +52,55 @@ export default class D3Page extends Component {
     width: "10", 
     exponent: 1,
     toDraw: [{color:'blue', width: '20'}], 
-    selectednode:[]
+    selectednode:[],
+    screenWidth:  800,
   }
   constructor(){
     super();
     // run java spring REST app ~/workspace/vertex/ to provide edges and vertexes json
     this.doUpdate = this.doUpdate.bind(this);
+    this.updateDimensions = this.updateDimensions.bind(this);
     this.setSelected = this.setSelected.bind(this);
     axios.get('http://localhost:8080/edges')
     .then(edgesResponse => {
       // console.log('edges', edgesResponse);
       axios.get('http://localhost:8080/vertexes')
       .then(vertexesResponse => {
-        console.log('vertexes', vertexesResponse, edgesResponse);
+        // console.log('vertexes', vertexesResponse, edgesResponse);
         this.doUpdate(vertexesResponse, edgesResponse);
       });
   
     });
   }
+
+  /**
+   * Calculate & Update state of new dimensions
+   */
+  updateDimensions() {
+    const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+    if(this.state.screenWidth != w) {
+      this.setState({ screenWidth: w });
+    } 
+  }
+
+  /**
+   * Add event listener - we want a redraw on browser window redraw!
+   */
+  componentDidMount() {
+    this.updateDimensions();
+    window.addEventListener("resize", this.updateDimensions);
+  }
+
+  /**
+   * Remove event listener
+   */
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateDimensions);
+  }
+
+  /**
+   * callback when node selected
+   */
   setSelected(selectednode){
     //console.log('doUpdate vertexes', vertexesResponse.data, edgesResponse.data);
     if (selectednode && selectednode.id && selectednode.name){
@@ -80,7 +118,8 @@ export default class D3Page extends Component {
             'name':selectednode.name,
             'category':selectednode.category
           }]
-        }),() => { console.log('hey', JSON.stringify(this.state))});  
+        }),() => { // console.log('hey', JSON.stringify(this.state))
+                  });  
   
       }
     }
@@ -104,7 +143,7 @@ export default class D3Page extends Component {
   } 
 
   onChange = (evt) => {
-  	console.log('setting ', evt.target.name, evt.target.value);
+  	console.log('viz selection change ', evt.target.name, evt.target.value);
   	this.setState({[evt.target.name]: evt.target.value})
   }
   static getDerivedStateFromError(error) {
@@ -118,10 +157,10 @@ export default class D3Page extends Component {
   }
   render() {  
     if(this.state.selectednode != undefined){
-      console.log(this.state.selectednode);
+      //console.log(this.state.selectednode);
     }
     if( this.state.data != undefined && this.state.data.nodes != undefined){
-      console.log(this.state.data.nodes);
+      // console.log(this.state.data.nodes);
     }
     return (
       <Page
@@ -163,23 +202,21 @@ export default class D3Page extends Component {
           <div >
                 <Row>
                     <Col lg={8} md={6} sm={6} xs={12} className="zmb-3">
-                      <VizForceDirectedLayout data={this.state.data} setSelected={this.setSelected} />
+                      <VizForceDirectedLayout data={this.state.data} 
+                        setSelected={this.setSelected} screenWidth={this.state.screenWidth}/>
                     </Col>
                     <Col lg={4} md={6} sm={6} xs={12} className="zmb-3">
                     {this.state.data != undefined && this.state.data.nodes != undefined ? 
                       <div>
-                        <BootstrapTable keyField='id' data={ products } columns={ columns } 
+                        <BootstrapTable keyField='id' data={ this.state.data.nodes } columns={ columnsReal } 
                           pagination={ paginationFactory() }/>
                       </div>
                       : null }
-                      {this.state.selectednode != undefined ? 
+                      {this.state.selectednode.length > 0 ? 
                       <div>
-                        <p>selected:eh</p>
-                        <p>selected:{JSON.stringify(this.state.selectednode)}</p>
-                        {/* <BootstrapTable data={this.state.selectednode} striped hover>
-                            <TableHeaderColumn isKey dataField='id'>ID</TableHeaderColumn>
-                            <TableHeaderColumn dataField='category'>category</TableHeaderColumn>
-                        </BootstrapTable> */}
+                        <p>selected:</p>
+                        <BootstrapTable keyField='id' data={ this.state.selectednode } 
+                          columns={ columnsReal } />
                       </div>
                       : null }
                     </Col>

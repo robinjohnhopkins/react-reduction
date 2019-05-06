@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import * as d3 from 'd3';
 
 var cssText = "position: absolute; max-width: 400px; height: auto;padding: 5px; background-color: white; -webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;-webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);-moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4); box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4); pointer-events: none; font: 12px sans-serif;";
-
+// NB above cssText is as per style below
 // .hovercard {
 //   position: absolute;
 //   max-width: 400px;
@@ -20,15 +20,12 @@ var cssText = "position: absolute; max-width: 400px; height: auto;padding: 5px; 
 // }
 
 const VizForceDirectedLayout = (props) => {
-
   useEffect(() => {
    d3.select('.viz > *').remove();
    draw(props)
- }, [props.data])
+ }, [props.data, props.screenWidth])
   return <div className="viz" />
 }
-
-
 
 const draw = (props) => {
   var nodes = [
@@ -94,15 +91,22 @@ var links = [
     { "source": "Gemini 12", "target": "Edwin Aldrin" }
 ];
 if (props.data){
-  console.log('props.data ', props.data);
+  //console.log('props.data ', props.data);
   nodes = props.data.nodes;
   links = props.data.edges;
 } else {
   console.log('NOT props.data ');
 }
 
-var width = 1000;
-var height = 1000;
+// get outer w,h for ratio, get div width and calc height by preserving ratio
+const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+const h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+var viz = d3.select('.viz')
+var containerWidth = viz.style('width').slice(0, -2)  // float
+var containerHeight = containerWidth * h / w;         // preserve ratio of outer window
+var width = parseInt(containerWidth)
+var height = parseInt(containerHeight)
+console.log('width height ',w ,h, containerWidth, width, height);
 
 var svg = d3.select('.viz').append('svg')
     .attr("width", width)
@@ -144,6 +148,7 @@ var link = g
     .attr("stroke-width", 2)
     .attr("stroke", "#ddd");
 var setSelected = props.setSelected;
+
 //group the nodes together for easier ticking
 var node = g.selectAll("g")
     .data(nodes)
@@ -154,14 +159,7 @@ var node = g.selectAll("g")
         .on("start", dragStart)
         .on("drag", dragDone)
     )
-    .on("click", function(d){
-      console.log('node click',d);
-      setSelected(d);
-
-      d3.select(this).attr('r', 25)
-          .style("fill","lightcoral")
-          .style("stroke","red");
-  });
+    .on("click", selectNodeClick );
 
 // add the node circle with the specific colors and radius
 node
@@ -187,11 +185,25 @@ function radius(d) {
 }
 
 function fillColor(d) {
-    if (d.nodeType == "A") {
-        return "#FC3D21";
-    } else {
-        return "#0B3D91";
-    }
+  if (d.nodeType == "A") {
+      return "#FC3D21";
+  } else {
+      return "#0B3D91";
+  }
+}
+
+// call parent callback to inform selected
+// reset all nodes to default, style selected node as clicked
+function selectNodeClick(d) {
+  //console.log('node click',d, nodes.length);
+  setSelected(d);
+  node.style("fill",fillColor(node))
+      .style("stroke",null)
+      .attr('r', null);
+
+  d3.select(this).attr('r', 25)
+      .style("fill","lightcoral")
+      .style("stroke","red");
 }
 
 // add the name label
@@ -271,7 +283,7 @@ function simulation_tick() {
            hovercard.html(tip)
                .style('left', d3.event.pageX + 'px')
                .style('top', d3.event.pageY + 'px');
-           console.log('hover link', d);
+           // console.log('hover link', d);
        });
        
        link.on('mouseout', function(d) {
