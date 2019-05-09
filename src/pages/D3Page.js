@@ -8,7 +8,7 @@ import EmphasizeRange from './EmphasizeRange';
 import VizAddCircles from 'demos/VizAddCircles';
 import VizForceDirectedLayoutAndTable from 'demos/VizForceDirectedLayoutAndTable';
 import VisVis from 'demos/VisVis';
-import VisComplex from 'demos/VisComplex';
+import VizComplexAndTable from 'demos/VizComplexAndTable';
 
 export default class D3Page extends Component {
   state = {
@@ -155,7 +155,7 @@ export default class D3Page extends Component {
           <option value="VisComplex">VisComplex</option>
         </select>
       </div>
-        { this.state.vizSel === 'VisComplex' ? <VisComplex data={this.state.data} 
+        { this.state.vizSel === 'VisComplex' ? <VizComplexAndTable data={this.state.data} 
           screenWidth={this.state.screenWidth} /> : null}
         { this.state.vizSel === 'Vis' ? <VisVis data={this.state.data} 
           screenWidth={this.state.screenWidth} /> : null}

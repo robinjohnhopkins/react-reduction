@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import vis from 'vis/dist/vis';
 import 'vis/dist/vis.css';
+import * as d3 from 'd3';
 
 // See http://visjs.org - for getting started with most excellent visjs
 // See https://www.kenedict.com/connecting-startups-and-investors-in-mobile-technology/
@@ -20,13 +21,12 @@ var cssText = "width: 800px; height: auto;border: 0px solid lightgray;";
 //   border: '0px solid lightgray',
 // }
 const VisComplex = (props) => {
+
   // get outer w,h for ratio, get div width and calc height by preserving ratio
   const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
   const h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
  
-  var containerWidth = document.getElementById("d3page").offsetWidth;
-
-  //var containerWidth = props.screenWidth
+  var containerWidth = document.getElementById("d3page").offsetWidth * 2/3;
   var containerHeight = containerWidth * 0.9 * h / w;         // preserve ratio of outer window
   var width = parseInt(containerWidth)
   var height = parseInt(containerHeight)
@@ -37,6 +37,7 @@ const VisComplex = (props) => {
     border: '0px solid lightgray',
   }
   useEffect(() => {
+
    draw(props)
  }, [props.data, props.screenWidth])
   return <div className="viz"  id="viz" style={mynetwork} >hey</div>
@@ -1953,10 +1954,10 @@ const draw = (props) => {
         {from: 882, to: 268},
         {from: 882, to: 331}
             ];
-            if (props.data.nodes){
+            if (props.data && props.data.nodes){
                 nodesData = props.data.nodes;
             }
-            if (props.data.edges){
+            if (props.data && props.data.edges){
                 edgesData = props.data.edges;
             }
             // create a network
@@ -2001,7 +2002,7 @@ const draw = (props) => {
                 physics: {barnesHut: {gravitationalConstant: -80000, springConstant: 0.001, springLength: 200}},
                 hideEdgesOnDrag: true
             };
-        
+            var setSelected = props.setSelected;
             network = new vis.Network(container, data, options);
             network.on("click",onClick);
 
@@ -2033,7 +2034,16 @@ function onClick(selectedItems) {
         // we will now start to collect all the connected nodes we want to highlight.
         var connectedNodes = selectedItems.nodes;
 
-        // we can store them into levels of seperation and we could then later use this to define a color per level
+        // { edges: (3) ["e4abe8cf-c002-c299-ec7b-612a327d22fa", "701e5e56-e935-9e24-b3db-4d0556bd8fef", "96e177ca-1699-1d6b-eff-e41c409263d"]
+        //   nodes: (9) ["fb", "gb", "dc", "pb", "db", "ac", "nb", "bb", "cc"]
+        // } zeroth node is one clicked
+        console.log(selectedItems);
+        var selectedNode = selectedItems.nodes[0];
+        var detailedNode = allNodes[selectedNode];
+        setSelected(detailedNode);
+
+        // we can store them into levels of seperation and we could then later use
+        // this to define a color per level
         // any data can be added to a node, this is just stored in the nodeObject.
         storeLevelOfSeperation(connectedNodes,0, allNodes);
         for (var i = 1; i < degrees + 1; i++) {
