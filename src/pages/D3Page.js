@@ -22,6 +22,7 @@ export default class D3Page extends Component {
     // run java spring REST app ~/workspace/vertex/ to provide edges and vertexes json
     this.doUpdate = this.doUpdate.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
+    this.mapNodeToVisNode = this.mapNodeToVisNode.bind(this);
     axios.get('http://localhost:8080/edges')
     .then(edgesResponse => {
       // console.log('edges', edgesResponse);
@@ -58,20 +59,63 @@ export default class D3Page extends Component {
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateDimensions);
   }
+  categoryToGroup(cat){
+    if (cat === 'Cat') return 1;
+    if (cat === 'Dog') return 2;
+    if (cat === 'Fish') return 3;
+    return 0;
+  }
+  GroupToShape(group){
+    if (group === 1) return 'dot';
+    return 'square';
+  }
+  mapNodeToVisNode(node) {
+    var value = node.name.length / 10.0; 
+    var group = this.categoryToGroup(node.category);
+    var shape = this.GroupToShape(group);
+    var newnode = {
+      category: node.category,
+      id: node.id,
+      name: node.name,
+      label:node.name,
+      title:node.name,
+      value: value,
+      group: group,
+      shape: shape
+    };
+    return newnode;
+  }
 
+  mapEdgeToVisEdge(edge) {
+    var newedge = {
+      source: edge.source,
+      target: edge.target,
+      label:edge.label,
+      type:edge.type,
+      from: edge.source,
+      to: edge.target
+    };
+    return newedge;
+  }
+  // vis node format
+  //    {id: 1, label: 'l1', title: 'tit1', value: 0.005618, group: 47, shape: 'dot'},
+  // vis edge format 
+  //  {from: 1, to: 23},
   // example node in nodes
   // node={
   //   category: "Fish",
   //   id: "kb",
-  //   index: 10,
+  //   index: 10,   -> not in original
   //   name: "kb"  
   // }
+  // example edge in edges
+  // {"source":"ab","target":"mb","label":"Cat","type":"arrow"}
   doUpdate(vertexesResponse, edgesResponse){
     console.log('doUpdate vertexes', vertexesResponse.data, edgesResponse.data);
     this.setState({
           data: {
-            nodes: vertexesResponse.data,
-            edges: edgesResponse.data
+            nodes: vertexesResponse.data.map(this.mapNodeToVisNode),
+            edges: edgesResponse.data.map(this.mapEdgeToVisEdge)
           }
         });
   }

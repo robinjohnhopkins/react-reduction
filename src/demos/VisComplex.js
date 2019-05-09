@@ -1953,6 +1953,12 @@ const draw = (props) => {
         {from: 882, to: 268},
         {from: 882, to: 331}
             ];
+            if (props.data.nodes){
+                nodesData = props.data.nodes;
+            }
+            if (props.data.edges){
+                edgesData = props.data.edges;
+            }
             // create a network
             nodes.add(nodesData);
             edges.add(edgesData);
