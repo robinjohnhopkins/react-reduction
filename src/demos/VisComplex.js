@@ -20,6 +20,8 @@ var cssText = "width: 800px; height: auto;border: 0px solid lightgray;";
 //   height: '800px',
 //   border: '0px solid lightgray',
 // }
+
+
 const VisComplex = (props) => {
 
   // get outer w,h for ratio, get div width and calc height by preserving ratio
@@ -35,6 +37,12 @@ const VisComplex = (props) => {
     width: width,
     height: height,
     border: '0px solid lightgray',
+  }
+  if (props.selectednode && props.selectednode[0] && props.selectednode[0].id){
+    var nodeId = props.selectednode[0].id;
+    //var zoomLevel = .9;
+    //network.focusOnNode(nodeId, zoomLevel);
+    network.focusOnNode(nodeId);
   }
   useEffect(() => {
 
@@ -1980,31 +1988,63 @@ const draw = (props) => {
                     //   size: 12, // px
                     //   face: 'Tahoma',
                     // },
-              borderWidth: 0.5,
-                    },
+                borderWidth: 0.5,
+                },
                 edges: {
                     width: 0.2,
                      inheritColor: "from",
                     //color:{inherit:"from"},
-              style: "line",
-              widthSelectionMultiplier: 8
-              //hoverWidth: function (width) {return width+1;}
-                    },
+                    style: "line",
+                    widthSelectionMultiplier: 8
+                    //hoverWidth: function (width) {return width+1;}
+                },
                 tooltip: {
                     delay: 200,
                     fontSize: 12,
                     color: {
                         background: "#fff"
                         }
-                    },
-                smoothCurves: {dynamic:false, type: "continuous"},
+                },
+                smoothCurves: {
+                    enabled: false,
+                    dynamic: false,
+                    type: "continuous",
+                    roundness: 0.5
+                },
+                dynamicSmoothCurves: false,
                 stabilize: false,
-                physics: {barnesHut: {gravitationalConstant: -80000, springConstant: 0.001, springLength: 200}},
+                physics: {barnesHut: {gravitationalConstant: -80000, springConstant: 0.001, springLength: 200},
+                    stabilization: {
+                        enabled:true,
+                        iterations:50,
+                        updateInterval:25
+                        },
+                    enabled:true,
+                    damping:0.1,
+                 },
+                stabilizationIterations: 100,  // maximum number of iteration to stabilize
                 hideEdgesOnDrag: true
             };
             var setSelected = props.setSelected;
-            network = new vis.Network(container, data, options);
+            network = new vis.Network(container, data, options);                       // hz (fps)
             network.on("click",onClick);
+         
+            // network.on("stabilizationProgress", function(params) {
+            //     var maxWidth = 496;
+            //     var minWidth = 20;
+            //     var widthFactor = params.iterations/params.total;
+            //     var width = Math.max(minWidth,maxWidth * widthFactor);
+
+            //     document.getElementById('bar').style.width = width + 'px';
+            //     document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+            // });
+            // network.once("stabilizationIterationsDone", function() {
+            //     document.getElementById('text').innerHTML = '100%';
+            //     document.getElementById('bar').style.width = '496px';
+            //     document.getElementById('loadingBar').style.opacity = 0;
+            //     // really clean the dom element
+            //     setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+            // });
 
 function onClick(selectedItems) {
     var nodeId;
@@ -2040,7 +2080,7 @@ function onClick(selectedItems) {
         console.log(selectedItems);
         var selectedNode = selectedItems.nodes[0];
         var detailedNode = allNodes[selectedNode];
-        setSelected(detailedNode);
+        setSelected(detailedNode, 'graph');
 
         // we can store them into levels of seperation and we could then later use
         // this to define a color per level

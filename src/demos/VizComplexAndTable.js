@@ -35,12 +35,13 @@ export default class VizComplexAndTable extends Component {
     /**
      * callback when node selected
      */
-    setSelected(selectednode){
+    setSelected(selectednode, clickSource){
       //console.log('doUpdate vertexes', vertexesResponse.data, edgesResponse.data);
       if (selectednode && selectednode.id && selectednode.name){
         if (this.state.selectednode[0] == undefined || this.state.selectednode[0].id != selectednode.id){
           this.setState(prevState => ({
             selectednode: [{
+              'clickSource':clickSource,
               'id':selectednode.id,
               'name':selectednode.name,
               'category':selectednode.category
@@ -56,7 +57,7 @@ export default class VizComplexAndTable extends Component {
         // mode: 'checkbox',
         onSelect: (row, isSelect, rowIndex, e) => {
           console.log('click ', row);
-          this.setSelected(row);
+          this.setSelected(row[0], 'table');
           // row: {id: "ib", category: "Cat", name: "ib", index: 8, x: 245.45121212454782, …}
           // if (SOME_CONDITION) {
           //   return false; to reject selection
@@ -69,7 +70,7 @@ export default class VizComplexAndTable extends Component {
           <Row>
             <Col className="viscomplex"  id="viscomplex" lg={8} md={6} sm={6} xs={12} className="zmb-3">
             <VisComplex data={this.props.data} screenWidth={this.props.screenWidth}
-              setSelected={this.setSelected} />
+              setSelected={this.setSelected} selectednode={this.state.selectednode} />
             </Col>
             <Col lg={4} md={6} sm={6} xs={12} className="zmb-3">
             {this.props.data != undefined && this.props.data.nodes != undefined ? 
