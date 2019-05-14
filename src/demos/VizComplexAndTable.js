@@ -27,10 +27,34 @@ const columnsReal = [{
 export default class VizComplexAndTable extends Component {
     state = {
       selectednode:[],
+      dimensions: null,
     }
     constructor(){
       super();
       this.setSelected = this.setSelected.bind(this);
+    }
+    componentDidMount() {
+      var vizCanT = document.getElementById("viscomplex");
+      var containerWidth = vizCanT.offsetWidth;
+      var offsetHeight = vizCanT.offsetHeight;
+      this.setState({
+        dimensions: {
+          width: containerWidth,
+          height: offsetHeight,
+        },
+      });
+    }
+    renderContent() {
+      const { dimensions } = this.state;
+  
+      return (
+        <div>
+          width: {dimensions.width}
+          <p>
+          height: {dimensions.height}
+          </p>
+        </div>
+      );
     }
     /**
      * callback when node selected
@@ -52,6 +76,7 @@ export default class VizComplexAndTable extends Component {
       }
     }
     render(){
+      const { dimensions } = this.state;
       const selectRow = {
         mode: 'radio', // single row selection
         // mode: 'checkbox',
@@ -68,7 +93,7 @@ export default class VizComplexAndTable extends Component {
       return (
         <div>
           <Row>
-            <Col className="viscomplex"  id="viscomplex" lg={8} md={6} sm={6} xs={12} className="zmb-3">
+            <Col  className="viscomplex"  id="viscomplex" lg={8} md={6} sm={6} xs={12} className="zmb-3">
             <VisComplex data={this.props.data} screenWidth={this.props.screenWidth}
               setSelected={this.setSelected} selectednode={this.state.selectednode} />
             </Col>
@@ -89,6 +114,7 @@ export default class VizComplexAndTable extends Component {
               : null }
             </Col>
           </Row>
+          <Row>{dimensions && this.renderContent()}</Row>
         </div>); 
   }
 }

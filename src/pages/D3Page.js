@@ -59,20 +59,13 @@ export default class D3Page extends Component {
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateDimensions);
   }
-  categoryToGroup(cat){
-    if (cat === 'Cat') return 1;
-    if (cat === 'Dog') return 2;
-    if (cat === 'Fish') return 3;
-    return 0;
-  }
   GroupToShape(group){
-    if (group === 1) return 'dot';
+    if (group === 'group1') return 'dot';
     return 'square';
   }
   mapNodeToVisNode(node) {
     var value = node.name.length / 10.0; 
-    var group = this.categoryToGroup(node.category);
-    var shape = this.GroupToShape(group);
+    var shape = this.GroupToShape(node.group);
     var newnode = {
       category: node.category,
       id: node.id,
@@ -80,7 +73,7 @@ export default class D3Page extends Component {
       label:node.name,
       title:node.name,
       value: value,
-      group: group,
+      group: node.group,
       shape: shape
     };
     return newnode;
