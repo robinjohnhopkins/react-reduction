@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import * as d3 from 'd3';
 import { scaleLinear } from 'd3-scale';
 
+// Bubble chart with d3-force based on following with mouse click and drag added and play with colors etc
+//https://blockbuilder.org/alex1221/42ae2ddf18a7607d15a0ce4308963c4f
 const VizBubbles = (props) => {
   useEffect(() => {
    d3.select('.viz > *').remove();
