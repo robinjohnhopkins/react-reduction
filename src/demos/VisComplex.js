@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import vis from 'vis/dist/vis';
 import 'vis/dist/vis.css';
-import * as d3 from 'd3';
 import { sampleEdgesData, sampleNodesData } from "./VisComplexData";
 
 
@@ -10,7 +9,7 @@ import { sampleEdgesData, sampleNodesData } from "./VisComplexData";
 // for visjs complex network example using visjs version 3.1.0
 // transformed below
 
-var cssText = "width: 800px; height: auto;border: 0px solid lightgray;";
+//var cssText = "width: 800px; height: auto;border: 0px solid lightgray;";
 // NB above cssText is as per style below
 // #mynetwork {
 //   width: 800px;
@@ -84,7 +83,7 @@ const draw = (props) => {
     };
     var options = {
         nodes: {
-            borderWidth: 5,
+            borderWidth: 0.5,
             radiusMin: 5,
             radiusMax: 50,
             fontSize: 12,
@@ -93,7 +92,6 @@ const draw = (props) => {
             //   size: 12, // px
             //   face: 'Tahoma',
             // },
-        borderWidth: 0.5,
         },
         edges: {
             width: 0.2,
@@ -156,7 +154,7 @@ const draw = (props) => {
         var degrees = 2;
         // we get all data from the dataset once to avoid updating multiple times.
         var allNodes = nodes.get({returnType:"Object"});
-        if (selectedItems.nodes.length == 0) {
+        if (selectedItems.nodes.length === 0) {
             // restore on unselect
             for (nodeId in allNodes) {
                 if (allNodes.hasOwnProperty(nodeId)) {
@@ -197,7 +195,7 @@ const draw = (props) => {
             }
             for (nodeId in allNodes) {
                 if (allNodes.hasOwnProperty(nodeId)) {
-                    if (allNodes[nodeId]['inConnectionList'] == true) {
+                    if (allNodes[nodeId]['inConnectionList'] === true) {
                         if (allNodes[nodeId]['levelOfSeperation'] !== undefined) {
                             if (allNodes[nodeId]['levelOfSeperation'] >= 2) {
                                 allNodes[nodeId].color = 'rgba(150,150,150,0.75)';
@@ -263,15 +261,15 @@ const draw = (props) => {
      *
      */
     function appendConnectedNodes(sourceNodes, allEdges) {
-        var tempSourceNodes = [];
+        var tempSourceNodes = [],i;
         // first we make a copy of the nodes so we do not extend the array we loop over.
-        for (var i = 0; i < sourceNodes.length; i++) {
+        for (i = 0; i < sourceNodes.length; i++) {
             tempSourceNodes.push(sourceNodes[i])
         }
 
-        for (var i = 0; i < tempSourceNodes.length; i++) {
+        for (i = 0; i < tempSourceNodes.length; i++) {
             var nodeId = tempSourceNodes[i];
-            if (sourceNodes.indexOf(nodeId) == -1) {
+            if (sourceNodes.indexOf(nodeId) === -1) {
                 sourceNodes.push(nodeId);
             }
             addUnique(getConnectedNodes(nodeId, allEdges),sourceNodes);
@@ -286,7 +284,7 @@ const draw = (props) => {
      */
     function addUnique(fromArray, toArray) {
         for (var i = 0; i < fromArray.length; i++) {
-            if (toArray.indexOf(fromArray[i]) == -1) {
+            if (toArray.indexOf(fromArray[i]) === -1) {
                 toArray.push(fromArray[i]);
             }
         }
@@ -303,10 +301,10 @@ const draw = (props) => {
 
         for (var i = 0; i < edgesArray.length; i++) {
             var edge = edgesArray[i];
-            if (edge.to == nodeId) {
+            if (edge.to === nodeId) {
                 connectedNodes.push(edge.from);
             }
-            else if (edge.from == nodeId) {
+            else if (edge.from === nodeId) {
                 connectedNodes.push(edge.to)
             }
         }

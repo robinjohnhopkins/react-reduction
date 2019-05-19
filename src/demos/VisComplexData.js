@@ -1,4 +1,5 @@
 // array of nodes
+/* eslint-disable */ // disables Unexpected string concatenation of literals no-useless-concat
 export var sampleNodesData = [
         {id: 1, label: 'Fastback Networks', title: '<b>Fastback Networks</b> <br><br>' + 'Country: ' + 'USA' + '<br>' + 'City: ' + 'San Jose', value: 0.00561886500819588, group: 47, x: -405.378, y: 494.57608, shape: 'image', image:'User-Administrator-Blue-icon.png'},
         {id: 2, label: 'Benchmark Capital / Balderton Capital', title: '<b>Benchmark Capital / Balderton Capital</b> <br><br>' + 'Country: ' + 'No data' + '<br>' + 'City: ' + 'No data', value: 0, group: 160, x: 240.62976, y: 688.2266, shape: 'image', image:'skyscrapers.png'},

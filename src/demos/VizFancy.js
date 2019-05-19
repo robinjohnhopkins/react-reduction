@@ -53,10 +53,6 @@ const draw = (props) => {
       .attr('transform', 'translate(' + margin + ', ' + margin + ')');
 
     console.log('width, height',w,h, width ,height);
-    var line = d3.line()
-      .x(d => x(d.date))
-      .y(d => y(d.value))
-      ;
     var parseTime = d3.timeParse("%m/%d/%Y");
 
     data.forEach(function (d) {
@@ -78,15 +74,16 @@ const draw = (props) => {
         .exponent(exponent).nice()  // this pushes the scale at top of y to make it nicer!
         ;                           // so instead of y going upto say 62, it will go up to 65
     var propertyNames = [];
-    for (var name in data[0]) {
-        if (name == "date") {
+    var name;
+    for (name in data[0]) {
+        if (name === "date") {
             continue;
         }
         propertyNames.push(name);
         console.log("Property: " + name);
     }
-    for (var name in data[0]) {
-        if (name == "date") {
+    for (name in data[0]) {
+        if (name === "date") {
             continue;
         }
         propertyNames.push(name);
@@ -169,7 +166,7 @@ const draw = (props) => {
     }
 
     function plotVariable(propertyName, color) {
-        var line1 = d3.line()
+        var line = d3.line()
             .x(d => x(d.date))
             .y(d => y(d[propertyName]))
             ;
@@ -178,7 +175,7 @@ const draw = (props) => {
             .data([data])
             .attr("fill", "none")
             .attr("stroke", color)
-            .attr("d", line1)
+            .attr("d", line)
     }
     function drawLegend(propertyNames, dataGroup) {
         var legendElements = [];

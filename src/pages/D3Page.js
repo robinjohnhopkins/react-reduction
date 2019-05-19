@@ -9,6 +9,7 @@ import VizAddCircles from 'demos/VizAddCircles';
 import VizForceDirectedLayoutAndTable from 'demos/VizForceDirectedLayoutAndTable';
 import VisVis from 'demos/VisVis';
 import VizComplexAndTable from 'demos/VizComplexAndTable';
+import VizBubbles from 'demos/VizBubbles';
 
 export default class D3Page extends Component {
   state = {
@@ -40,7 +41,7 @@ export default class D3Page extends Component {
    */
   updateDimensions() {
     const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-    if(this.state.screenWidth != w) {
+    if(this.state.screenWidth !== w) {
       this.setState({ screenWidth: w });
     } 
   }
@@ -146,22 +147,25 @@ export default class D3Page extends Component {
           <option value="ForceDirectedLayout">ForceDirectedLayout</option>
           <option value="Vis">Vis</option>
           <option value="VisComplex">VisComplex</option>
+          <option value="VizBubbles">VizBubbles</option>
         </select>
       </div>
+        { this.state.vizSel === 'VizBubbles' ? <VizBubbles data={this.state.data} 
+          screenWidth={this.state.screenWidth} /> : null}
         { this.state.vizSel === 'VisComplex' ? <VizComplexAndTable data={this.state.data} 
           screenWidth={this.state.screenWidth} /> : null}
         { this.state.vizSel === 'Vis' ? <VisVis data={this.state.data} 
           screenWidth={this.state.screenWidth} /> : null}
         { this.state.vizSel === 'viz' ? <VizAddCircles /> : null}
-        { this.state.vizSel == 'ForceDirectedLayout' ? 
+        { this.state.vizSel === 'ForceDirectedLayout' ? 
           <VizForceDirectedLayoutAndTable data={this.state.data} /> : null }
-          { this.state.vizSel == 'vizPlay' ? <VizPlay /> : null}
-          { this.state.vizSel == 'VizMultiLine' ?
+          { this.state.vizSel === 'vizPlay' ? <VizPlay /> : null}
+          { this.state.vizSel === 'VizMultiLine' ?
           <div>
             <EmphasizeRange onChange={this.onChange} value={this.state.exponent} />
             <VizMultiLine exponent={this.state.exponent} /> 
           </div>: null}
-          { this.state.vizSel == 'VizFancy' ? 
+          { this.state.vizSel === 'VizFancy' ? 
           <div>
             <EmphasizeRange onChange={this.onChange} value={this.state.exponent} />
             <VizFancy exponent={this.state.exponent} /> 

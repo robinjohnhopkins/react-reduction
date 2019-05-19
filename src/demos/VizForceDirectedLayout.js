@@ -19,6 +19,7 @@ var cssText = "position: absolute; max-width: 400px; height: auto;padding: 5px; 
 //   font: 12px sans-serif;
 // }
 
+// D3 nodes with connection lines and line mouse over hovercard tooltip - nice
 const VizForceDirectedLayout = (props) => {
   useEffect(() => {
    d3.select('.viz > *').remove();
@@ -140,7 +141,7 @@ simulation
 //add tick instructions:
 simulation.on("tick", simulation_tick); // gives results of foces to nodes and allows us to apply that to our layout
 
-var link = g
+link = g
     .selectAll("line")
     .data(links)            // link array
     .enter()
@@ -168,13 +169,13 @@ node
     .attr("fill", fillColor);
 
 function radius(d) {
-  if (d.nodeType == undefined) {
+  if (d.nodeType === undefined) {
     return 2;
   } else {
-    if (d.nodeType && d.nodeType == "A") {
+    if (d.nodeType && d.nodeType === "A") {
       return 10;
   } else {
-    if (d.program && d.program == "Mercury") {
+    if (d.program && d.program === "Mercury") {
             return 15;
         }
         else {
@@ -185,7 +186,7 @@ function radius(d) {
 }
 
 function fillColor(d) {
-  if (d.nodeType == "A") {
+  if (d.nodeType === "A") {
       return "#FC3D21";
   } else {
       return "#0B3D91";

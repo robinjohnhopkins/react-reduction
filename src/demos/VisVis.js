@@ -2,11 +2,9 @@ import React, { useEffect } from "react";
 import vis from 'vis/dist/vis';
 import 'vis/dist/vis.css';
 
-import * as d3 from 'd3';
-
 // See http://visjs.org - for getting started with most excellent visjs
 
-var cssText = "width: 800px; height: auto;border: 0px solid lightgray;";
+//var cssText = "width: 800px; height: auto;border: 0px solid lightgray;";
 // NB above cssText is as per style below
 // #mynetwork {
 //   width: 800px;
@@ -29,7 +27,6 @@ const VisVis = (props) => {
 const draw = (props) => {
   var nodes = null;
   var edges = null;
-  var network = null;
 
     // create people.
     // value corresponds with the age of the person
@@ -81,7 +78,8 @@ const draw = (props) => {
         }
       }
     };
-    network = new vis.Network(container, data, options);
+    // eslint-disable-next-line
+    var network = new vis.Network(container, data, options);
   
 }
 

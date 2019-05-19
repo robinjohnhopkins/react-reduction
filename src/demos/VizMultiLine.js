@@ -53,10 +53,6 @@ const draw = (props) => {
       .attr('transform', 'translate(' + margin + ', ' + margin + ')');
 
     console.log('width, height',w,h, width ,height);
-    var line = d3.line()
-      .x(d => x(d.date))
-      .y(d => y(d.value))
-      ;
     var parseTime = d3.timeParse("%m/%d/%Y");
 
     data.forEach(function (d) {
@@ -80,7 +76,7 @@ const draw = (props) => {
     var propertyNames = [];
 
     for (var name in data[0]) {
-        if (name == "date") {
+        if (name === "date") {
             continue;
         }
         propertyNames.push(name);
@@ -114,7 +110,7 @@ const draw = (props) => {
     yAxis(yAxisGroup);
 
     function plotVariable(propertyName, color) {
-        var line1 = d3.line()
+        var line = d3.line()
             .x(d => x(d.date))
             .y(d => y(d[propertyName]))
             ;
@@ -123,7 +119,7 @@ const draw = (props) => {
             .data([data])
             .attr("fill", "none")
             .attr("stroke", color)
-            .attr("d", line1)
+            .attr("d", line)
         }
 
   }

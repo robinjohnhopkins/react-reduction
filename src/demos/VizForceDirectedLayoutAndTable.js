@@ -1,4 +1,4 @@
-import React, { useEffect, Component } from "react";
+import React, { Component } from "react";
 import { Row, Col } from 'reactstrap';
 import VizForceDirectedLayout from 'demos/VizForceDirectedLayout.js'
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.css'
@@ -6,16 +6,16 @@ import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.m
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import BootstrapTable from 'react-bootstrap-table-next';
 
-const columns = [{
-  dataField: 'id',
-  text: 'Product ID'
-}, {
-  dataField: 'name',
-  text: 'Product Name'
-}, {
-  dataField: 'price',
-  text: 'Product Price'
-}];
+// const columns = [{
+//   dataField: 'id',
+//   text: 'Product ID'
+// }, {
+//   dataField: 'name',
+//   text: 'Product Name'
+// }, {
+//   dataField: 'price',
+//   text: 'Product Price'
+// }];
 const columnsReal = [{
   dataField: 'id',
   text: 'ID'
@@ -38,7 +38,7 @@ export default class VizForceDirectedLayoutAndTable extends Component {
     setSelected(selectednode){
       //console.log('doUpdate vertexes', vertexesResponse.data, edgesResponse.data);
       if (selectednode && selectednode.id && selectednode.name){
-        if (this.state.selectednode[0] == undefined || this.state.selectednode[0].id != selectednode.id){
+        if (this.state.selectednode[0] === undefined || this.state.selectednode[0].id !== selectednode.id){
           this.setState(prevState => ({
             selectednode: [{
               'id':selectednode.id,
@@ -72,7 +72,7 @@ export default class VizForceDirectedLayoutAndTable extends Component {
                 setSelected={this.setSelected} screenWidth={this.state.screenWidth}/>
             </Col>
             <Col lg={4} md={6} sm={6} xs={12} className="zmb-3">
-            {this.props.data != undefined && this.props.data.nodes != undefined ? 
+            {this.props.data !== undefined && this.props.data.nodes !== undefined ? 
               <div>
                 <BootstrapTable keyField='id' data={ this.props.data.nodes } 
                   columns={ columnsReal } 
