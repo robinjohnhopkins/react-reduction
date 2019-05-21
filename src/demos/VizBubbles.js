@@ -27,12 +27,24 @@ const draw = (props) => {
   let bubbles = null;
   let labels = null;
   //let nodes = [];
+  var format = d3.format(",d");
 
   var svg = d3.select('.viz').append('svg')
     .attr('height', h)
     .attr('width', w)
     .attr('id', 'svg-viz')
   console.log('width, height',w,h);
+  var tooltip = d3.select('.viz')
+    .append("div")
+    .style("position", "absolute")
+    .style("z-index", "10")
+    .style("visibility", "hidden")
+    .style("color", "white")
+    .style("padding", "8px")
+    .style("background-color", "rgba(0, 0, 0, 0.75)")
+    .style("border-radius", "6px")
+    .style("font", "12px sans-serif")
+    .text("tooltip");
 
   // charge is dependent on size of the bubble, so bigger towards the middle
   function charge(d) {
@@ -179,6 +191,14 @@ const draw = (props) => {
     .attr('r', d => d.radius)
     .attr('fill', d => d.color)
 //      .attr('fill', d => fillColour(d.groupid))
+    .on("mouseover", function(d) {
+      tooltip.text("id:" + d.id + ": group:" + format(d.groupid));
+      tooltip.style("visibility", "visible");
+    })
+    .on("mousemove", function() {
+    return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");
+    })
+    .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
     .call(d3.drag()
               .on("start", dragstarted)
               .on("drag", dragged)
