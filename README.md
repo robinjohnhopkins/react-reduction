@@ -6,6 +6,12 @@
 
 You can check out [live preview](https://reduction-admin.github.io/react-reduction/).
 
+## Note to self
+master remains as per original.
+branch d3 has playing arounds including awesome d3 and vis.js example pages.
+The d3 samples will work standalone. But if you have run the ~/workspace/vertex
+java app, it will pick up data from there! Sweet.
+
 ## Quick Start
 
 1.  Clone the repo `git clone https://github.com/reduction-admin/react-reduction.git`
@@ -26,7 +32,7 @@ If you want more premium or free React Bootstrap themes, you can get it [here](h
 
 [![Flat Logic](public/img/screenshots/flatlogic.com_admin-dashboards_react.png)](https://flatlogic.com/admin-dashboards?ref=w7yTz44arn)
 
-## d3
+# d3
 
 added d3 page following this tutorial, which keeps react and d3 cleanly separate.
 
@@ -65,3 +71,9 @@ you need edges data like this:
 Other than that, it produces an impressive network graph with grouping and highlighting that causes non-selected nodes to grey.
 With circle and square nodes of different widths to visually show important nodes.
 Nodes have mouse over tooltips.
+
+## merge single file from master to branch d3
+```
+git checkout d3
+git checkout --patch master  README.md
+```
