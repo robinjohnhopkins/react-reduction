@@ -6,6 +6,12 @@
 
 You can check out [live preview](https://reduction-admin.github.io/react-reduction/).
 
+## Note to self
+master remains as per original.
+branch d3 has playing arounds including awesome d3 and vis.js example pages.
+The d3 samples will work standalone. But if you have run the ~/workspace/vertex
+java app, it will pick up data from there! Sweet.
+
 ## Quick Start
 
 1.  Clone the repo `git clone https://github.com/reduction-admin/react-reduction.git`
