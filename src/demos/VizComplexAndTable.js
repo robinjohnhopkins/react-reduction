@@ -60,6 +60,7 @@ export default class VizComplexAndTable extends Component {
      * callback when node selected
      */
     setSelected(selectednode, clickSource){
+      console.log('setSelected called ', selectednode, clickSource);
       //console.log('doUpdate vertexes', vertexesResponse.data, edgesResponse.data);
       if (selectednode && selectednode.id && selectednode.name){
         if (this.state.selectednode[0] === undefined || this.state.selectednode[0].id !== selectednode.id){
@@ -82,7 +83,8 @@ export default class VizComplexAndTable extends Component {
         // mode: 'checkbox',
         onSelect: (row, isSelect, rowIndex, e) => {
           console.log('click ', row);
-          this.setSelected(row[0], 'table');
+          this.setSelected(row, 'table'); // when single row selection - you do not need [0]!
+          // this.setSelected(row[0], 'table'); // multiple seelction needs [0]!
           // row: {id: "ib", category: "Cat", name: "ib", index: 8, x: 245.45121212454782, …}
           // if (SOME_CONDITION) {
           //   return false; to reject selection
