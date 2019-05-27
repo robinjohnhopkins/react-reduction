@@ -41,6 +41,9 @@ const VisComplex = (props) => {
   }
   if (props.selectednode && props.selectednode[0] && props.selectednode[0].id){
     var nodeId = props.selectednode[0].id;
+    var positions = network.getPositions(nodeId);
+    console.log('positions', positions); // db: {x: -1059, y: -1699}
+
     //var zoomLevel = .9;
     //network.focusOnNode(nodeId, zoomLevel);3.x function
     //network.focusOnNode(nodeId); 3.x function
@@ -58,21 +61,26 @@ const VisComplex = (props) => {
     //Network.prototype.getPositions
     //var cluster = network.findNode(nodeId);
     //console.log('cluster', cluster);
-
-    var positions = network.getPositions(nodeId);
-    console.log('positions', positions); // db: {x: -1059, y: -1699}
-
     var scale = 0.5;
     var offsetx = 0.5, offsety = 0.5;
     var positionx = positions[nodeId].x, positiony = positions[nodeId].y;
-    var options = {
-        position: {x:positionx,y:positiony},
-        scale: scale,
-        offset: {x:offsetx,y:offsety},
-        animation: true // default duration is 1000ms and default easingFunction is easeInOutQuad.
-      };
-
-      network.moveTo(options);
+    // zoom out to fit
+    var options = {offset: {x:0,y:0},
+        scale: 1.0,
+        duration: 1000, //ms
+        easingFunction: 'easeInOutQuad'
+    };
+    network.fit({animation:options});
+    // hold at zoomed out for a fraction then zoom in - nice
+    setTimeout(()=>{
+        var options = {
+            position: {x:positionx,y:positiony},
+            scale: scale,
+            offset: {x:offsetx,y:offsety},
+            animation: true // default duration is 1000ms and default easingFunction is easeInOutQuad.
+          };
+          network.moveTo(options);
+    }, 1200);
 
   }
   useEffect(() => {
