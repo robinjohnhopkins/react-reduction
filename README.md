@@ -72,6 +72,9 @@ Other than that, it produces an impressive network graph with grouping and highl
 With circle and square nodes of different widths to visually show important nodes.
 Nodes have mouse over tooltips.
 
+Updated to "vis": "^4.21.0". See VisComplex.js to see how the options need changing.
+Also ```network.moveTo``` is called rather than ```network.focusOnNode(nodeId)```.
+
 ## merge single file from master to branch d3
 ```
 git checkout d3

@@ -42,8 +42,38 @@ const VisComplex = (props) => {
   if (props.selectednode && props.selectednode[0] && props.selectednode[0].id){
     var nodeId = props.selectednode[0].id;
     //var zoomLevel = .9;
-    //network.focusOnNode(nodeId, zoomLevel);
-    network.focusOnNode(nodeId);
+    //network.focusOnNode(nodeId, zoomLevel);3.x function
+    //network.focusOnNode(nodeId); 3.x function
+
+    // possibly useful 4.x functions
+    //Network.prototype.findNode returns cluster of nodes including given node
+    //Network.prototype.moveTo
+    //Network.prototype.getBoundingBox
+    //Network.prototype.getConnectedNodes = function (objectId)
+    //Network.prototype.getConnectedEdges
+    //Network.prototype.startSimulation 
+    //Network.prototype.stopSimulation
+    //Network.prototype.getScale
+    //Network.prototype.getViewPosition 
+    //Network.prototype.getPositions
+    //var cluster = network.findNode(nodeId);
+    //console.log('cluster', cluster);
+
+    var positions = network.getPositions(nodeId);
+    console.log('positions', positions); // db: {x: -1059, y: -1699}
+
+    var scale = 0.5;
+    var offsetx = 0.5, offsety = 0.5;
+    var positionx = positions[nodeId].x, positiony = positions[nodeId].y;
+    var options = {
+        position: {x:positionx,y:positiony},
+        scale: scale,
+        offset: {x:offsetx,y:offsety},
+        animation: true // default duration is 1000ms and default easingFunction is easeInOutQuad.
+      };
+
+      network.moveTo(options);
+
   }
   useEffect(() => {
 
@@ -81,52 +111,63 @@ const draw = (props) => {
         nodes: nodes,
         edges: edges
     };
+    // "vis": "^4.21.0" options
+    // see node_modules/vis/dist/vis.js (28826) for options
     var options = {
         nodes: {
             borderWidth: 0.5,
-            radiusMin: 5,
-            radiusMax: 50,
-            fontSize: 12,
-            fontFace: "Tahoma",
-            // font: {
-            //   size: 12, // px
-            //   face: 'Tahoma',
-            // },
+            //radiusMin: 5,// 3.1 option
+            //radiusMax: 50,// 3.1 option
+            //fontSize: 12,// 3.1 option
+            //fontFace: "Tahoma",// 3.1 option
+            font: {
+              size: 12, // px
+              face: 'Tahoma',
+            },
         },
         edges: {
             width: 0.2,
-                inheritColor: "from",
-            //color:{inherit:"from"},
-            style: "line",
-            widthSelectionMultiplier: 8
+                //inheritColor: "from",
+            color:{inherit:"from"},
+            //style: "line",// 3.1 option
+            //widthSelectionMultiplier: 8,// 3.1 option
+            smooth: {
+                enabled: false,
+            }
             //hoverWidth: function (width) {return width+1;}
         },
-        tooltip: {
-            delay: 200,
-            fontSize: 12,
-            color: {
-                background: "#fff"
-                }
-        },
-        smoothCurves: {
-            enabled: false,
-            dynamic: false,
-            type: "continuous",
-            roundness: 0.5
-        },
-        dynamicSmoothCurves: false,
-        stabilize: false,
+        // tooltip: { // 3.1 option
+        //     delay: 200,
+        //     fontSize: 12,
+        //     color: {
+        //         background: "#fff"
+        //         }
+        // },
+        // tooltip: { boolean: bool, 'function': 'function' }, << this is new tooltip option
+        // smoothCurves: {// 3.1 option
+        //     enabled: false,
+        //     dynamic: false,
+        //     type: "continuous",
+        //     roundness: 0.5
+        // },
+        // dynamicSmoothCurves: false,// 3.1 option
+        // stabilize: false,// 3.1 option
         physics: {barnesHut: {gravitationalConstant: -80000, springConstant: 0.001, springLength: 200},
             stabilization: {
                 enabled:true,
                 iterations:50,
-                updateInterval:25
-                },
-            enabled:true,
-            damping:0.1,
+                updateInterval: 25,
+                onlyDynamicEdges: false,
+                fit: true
             },
-        stabilizationIterations: 100,  // maximum number of iteration to stabilize
-        hideEdgesOnDrag: true
+            enabled:true,
+            //damping:0.1,// 3.1 option
+            },
+        // stabilizationIterations: 100,  // 3.1 option maximum number of iteration to stabilize
+        // hideEdgesOnDrag: true// 3.1 option
+        interaction: {
+            hideEdgesOnDrag: true
+        }
     };
     var setSelected = props.setSelected;
     network = new vis.Network(container, data, options);                       // hz (fps)
